@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.READ_SMS"/>
 
 <!--    ensuring that our camera just runs fine on devices with no camera and would'nt be filtered out by google play -->
     <uses-feature android:name="android.hardware.camera" android:required="false"/>
