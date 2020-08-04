@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.READ_SMS"/>
     <uses-permission android:name="android.permission.RECEIVE_SMS"/>
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
 <!--    ensuring that our camera just runs fine on devices with no camera and would'nt be filtered out by google play -->
     <uses-feature android:name="android.hardware.camera" android:required="false"/>

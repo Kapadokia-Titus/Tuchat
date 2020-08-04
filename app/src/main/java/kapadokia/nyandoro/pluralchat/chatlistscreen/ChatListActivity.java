@@ -2,6 +2,7 @@ package kapadokia.nyandoro.pluralchat.chatlistscreen;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -9,6 +10,7 @@ import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
 
@@ -40,9 +42,25 @@ public class ChatListActivity extends AppCompatActivity implements ListView.OnIt
         super.onResume();
 
         requestReadContactsPermissions();
+        requestLocationPermission();
     }
 
+    private void requestLocationPermission(){
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            return;
+        }
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                101);
+    }
     private void requestReadContactsPermissions(){
+
+        //  checking if the permission is already granted
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED){
+            return;
+        }
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.READ_SMS},
                 100);
