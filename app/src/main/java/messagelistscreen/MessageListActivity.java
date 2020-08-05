@@ -1,12 +1,21 @@
 package messagelistscreen;
 
+import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.provider.MediaStore;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -46,7 +55,69 @@ public class MessageListActivity extends AppCompatActivity {
                 takePicture();
             }
         });
+
+        findViewById(R.id.button_send_location).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendLocation();
+            }
+        });
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if(requestCode == 101){
+            if(grantResults.length >0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                // Permission was granted
+            } else{
+                // Permission was denied
+            }
+        }
+    }
+
+    private void sendLocation(){
+        requestLocationPermissions();
+    }
+
+    private void requestLocationPermissions(){
+        if(ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+
+        if(ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)){
+            showPermissionRationale();
+        }else{
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    101);
+        }
+    }
+
+    private void showPermissionRationale(){
+        AlertDialog.Builder builder;
+        builder = new AlertDialog.Builder(this);
+        builder.setTitle("Location permission explanation")
+                .setMessage("PluralChat needs the location permission to send your location to your friends")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        ActivityCompat.requestPermissions(MessageListActivity.this,
+                                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                101);
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
+                .show();
+    }
+
 
     private void takePicture(){
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
